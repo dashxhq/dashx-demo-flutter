@@ -75,7 +75,9 @@ class _MyAppState extends State<MyApp> {
               child: const Text("Identify ")),
           TextButton(onPressed: () {}, child: const Text("Update Profile ")),
           TextButton(onPressed: () {}, child: const Text("Logout ")),
-          TextButton(onPressed: () {}, child: const Text("Start Game "))
+          TextButton(onPressed: () {
+            dx.trackEvent();
+          }, child: const Text("Start Game "))
         ],
       )),
     ));
