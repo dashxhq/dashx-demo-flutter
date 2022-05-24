@@ -1,10 +1,9 @@
 import 'package:dashx_flutter/dashx_flutter.dart';
+import 'package:dashx_flutter_example/constant.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-
-import 'constant.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -75,9 +74,11 @@ class _MyAppState extends State<MyApp> {
               child: const Text("Identify ")),
           TextButton(onPressed: () {}, child: const Text("Update Profile ")),
           TextButton(onPressed: () {}, child: const Text("Logout ")),
-          TextButton(onPressed: () {
-            dx.trackEvent();
-          }, child: const Text("Start Game "))
+          TextButton(
+              onPressed: () {
+                dx.track("Clicked Button", gameName: "Tetris");
+              },
+              child: const Text("Start Game "))
         ],
       )),
     ));
