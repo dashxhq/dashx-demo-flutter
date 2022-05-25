@@ -72,13 +72,27 @@ class _MyAppState extends State<MyApp> {
                 dx.identify();
               },
               child: const Text("Identify ")),
-          TextButton(onPressed: () {}, child: const Text("Update Profile ")),
-          TextButton(onPressed: () {}, child: const Text("Logout ")),
           TextButton(
               onPressed: () {
-                dx.track("Clicked Button", gameName: "Tetris");
+                dx.setIdentity("", "");
               },
-              child: const Text("Start Game "))
+              child: const Text("Set Identity")),
+          TextButton(
+            onPressed: () {},
+            child: const Text("Update Profile "),
+          ),
+          TextButton(
+            onPressed: () {
+              dx.track("Clicked Button", {"gameName": "Tetris"});
+            },
+            child: const Text("Play Game"),
+          ),
+          TextButton(
+            onPressed: () {
+              dx.subscribe();
+            },
+            child: const Text("Subscribe"),
+          ),
         ],
       )),
     ));
