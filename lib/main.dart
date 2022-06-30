@@ -136,6 +136,7 @@ class _SampleAppState extends State<SampleApp> {
                         setState(() {});
                         print(
                             'after ${email_controller.text}  ${password_controller.text}');
+                        // Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -153,7 +154,139 @@ class _SampleAppState extends State<SampleApp> {
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     side: BorderSide(color: Colors.blue)))),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text('Register'),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RegisterScreen extends StatefulWidget {
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  String error_message = '';
+  TextEditingController firstname_controller = TextEditingController();
+  TextEditingController lastname_controller = TextEditingController();
+  TextEditingController email_controller = TextEditingController();
+  TextEditingController password_controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Plugin Eample App')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 16),
+            Text(
+              'Register your account',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  Center(
+                    child: Text(
+                      error_message,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text('First Name'),
+                  TextField(
+                    controller: firstname_controller,
+                    keyboardType: TextInputType.emailAddress,
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Last Name'),
+                  TextField(
+                    controller: lastname_controller,
+                    obscureText: true,
+                    autofocus: false,
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Email'),
+                  TextField(
+                    controller: email_controller,
+                    keyboardType: TextInputType.emailAddress,
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Password'),
+                  TextField(
+                    controller: password_controller,
+                    obscureText: true,
+                    autofocus: false,
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.blue)))),
+                    onPressed: () async {
+                      if (firstname_controller.text.length == 0 ||
+                          lastname_controller.text.length == 0 ||
+                          email_controller.text.length == 0 ||
+                          password_controller.text.length == 0) {
+                        error_message = 'Check details.';
+                        setState(() {});
+                        print(
+                            'before ${email_controller.text}  ${password_controller.text}');
+                      } else {
+                        setState(() {});
+                        print(
+                            'after ${email_controller.text}  ${password_controller.text}');
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      }
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       child: Text('Register'),
