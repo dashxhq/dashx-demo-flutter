@@ -140,7 +140,7 @@ class _SampleAppState extends State<SampleApp> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                                builder: (context) => HomeScreen(dxObj: dx)));
                       }
                     },
                     child: Container(
@@ -158,7 +158,7 @@ class _SampleAppState extends State<SampleApp> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegisterScreen()));
+                              builder: (context) => RegisterScreen(dxObj: dx)));
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -176,6 +176,9 @@ class _SampleAppState extends State<SampleApp> {
 }
 
 class RegisterScreen extends StatefulWidget {
+  final DashX dxObj;
+  RegisterScreen({required this.dxObj, Key? key}) : super(key: key);
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -274,17 +277,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           password_controller.text.length == 0) {
                         error_message = 'Check details.';
                         setState(() {});
-                        print(
-                            'before ${email_controller.text}  ${password_controller.text}');
                       } else {
                         setState(() {});
-                        print(
-                            'after ${email_controller.text}  ${password_controller.text}');
+
+                        await widget.dxObj.register({
+                          "first_name": firstname_controller.text,
+                          "last_name": lastname_controller.text,
+                          "email": email_controller.text,
+                          "password": password_controller.text
+                        });
+                        // add this line to see respose.
+                        print(widget.dxObj.responseMessage!.statusCode);
+                        Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                                builder: (context) =>
+                                    HomeScreen(dxObj: widget.dxObj)));
                       }
                     },
                     child: Container(
