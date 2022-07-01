@@ -1,40 +1,29 @@
+import 'dart:convert';
+
 import 'package:dashx_flutter/dashx_flutter.dart';
 import 'package:dashx_flutter_example/constant.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
 
-void main() async {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var status = prefs.getBool('isLoggedIn') ?? false;
+  runApp(MaterialApp(home: status == true ? HomeScreen() : LoginScreen()));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(home: SampleApp());
-  }
-}
-
-class SampleApp extends StatefulWidget {
-  const SampleApp({Key? key}) : super(key: key);
-
-  @override
-  State<SampleApp> createState() => _SampleAppState();
-}
-
-class _SampleAppState extends State<SampleApp> {
-  String message = 'Unknown';
-  String uid = '';
+class _LoginScreenState extends State<LoginScreen> {
   String error_message = '';
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
@@ -48,26 +37,6 @@ class _SampleAppState extends State<SampleApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-
-    try {
-      uid = await dx.getUuid().then((value) => value);
-    } on PlatformException {
-      message = 'Failed set values.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   @override
@@ -132,12 +101,18 @@ class _SampleAppState extends State<SampleApp> {
                           'email': email_controller.text,
                           'password': password_controller.text
                         });
-                        print(dx.responseMessage!.body);
+
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setBool('isLoggedIn', true);
+                        var values = json.decode(dx.responseMessage!.body);
+                        Map<String, dynamic> map = values;
+                        prefs.setString('token', map.values.last);
                         Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen(dxObj: dx)));
+                                builder: (context) => HomeScreen()));
                       }
                     },
                     child: Container(
@@ -284,13 +259,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                         // add this line to see respose.
                         print(widget.dxObj.responseMessage!.statusCode);
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+
+                        prefs.setBool('isLoggedIn', true);
+                        prefs.setString('dx', widget.dxObj.toString());
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen(dxObj: widget.dxObj)));
+                                builder: (context) => HomeScreen()));
                       }
                     },
                     child: Container(
