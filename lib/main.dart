@@ -35,13 +35,10 @@ class SampleApp extends StatefulWidget {
 class _SampleAppState extends State<SampleApp> {
   String message = 'Unknown';
   String uid = '';
-  String password = '';
-  String email = '';
   String error_message = '';
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
 
-  DashXPlugin dashxFlutterPlugin = DashXPlugin();
   DashX dx = DashX(
     publicKey: publicKey,
     baseUri: baseUri,
@@ -60,7 +57,6 @@ class _SampleAppState extends State<SampleApp> {
     // We also handle the message potentially returning null.
 
     try {
-      dashxFlutterPlugin;
       uid = await dx.getUuid().then((value) => value);
     } on PlatformException {
       message = 'Failed set values.';
@@ -130,13 +126,14 @@ class _SampleAppState extends State<SampleApp> {
                           password_controller.text.length == 0) {
                         error_message = 'Check credentials.';
                         setState(() {});
-                        print(
-                            'before ${email_controller.text}  ${password_controller.text}');
                       } else {
                         setState(() {});
-                        print(
-                            'after ${email_controller.text}  ${password_controller.text}');
-                        // Navigator.pop(context);
+                        await dx.login({
+                          'email': email_controller.text,
+                          'password': password_controller.text
+                        });
+                        print(dx.responseMessage!.body);
+                        Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -231,7 +228,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text('Last Name'),
                   TextField(
                     controller: lastname_controller,
-                    obscureText: true,
                     autofocus: false,
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
